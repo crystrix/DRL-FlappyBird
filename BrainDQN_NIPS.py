@@ -49,7 +49,7 @@ class BrainDQN:
       model.add(Flatten())
       model.add(Dense(512))
       model.add(Activation('relu'))
-      model.add(Dense(2))
+      model.add(Dense(self.actions))
       model.compile(loss=keras.losses.categorical_crossentropy,
                     optimizer=keras.optimizers.Adadelta(),
                     metrics=['accuracy'])

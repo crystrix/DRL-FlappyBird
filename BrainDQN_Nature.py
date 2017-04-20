@@ -25,7 +25,7 @@ FRAME_PER_ACTION = 1
 GAMMA = 0.99 # decay rate of past observations
 OBSERVE = 100. # timesteps to observe before training
 EXPLORE = 200000. # frames over which to anneal epsilon
-INITIAL_EPSILON = 0.02#0.01 # starting value of epsilon
+INITIAL_EPSILON = 0.01#0.01 # starting value of epsilon
 FINAL_EPSILON = 0.001#0.001 # final value of epsilon
 REPLAY_MEMORY = 50000 # number of previous transitions to remember
 BATCH_SIZE = 32 # size of minibatch
@@ -64,9 +64,7 @@ class BrainDQN:
 
   def copyTargetQNetwork(self):
     print('copy')
-    tmp = self.copy_model
-    self.copy_model = self.model
-    self.model = tmp
+    self.copy_model = copy.copy(self.model)
 
   def createTrainingMethod(self):
     self.actionInput = tf.placeholder("float",[None,self.actions])
@@ -127,7 +125,7 @@ class BrainDQN:
 
   def getAction(self):
     current = self.currentState.reshape(1,80,80,4)
-    QValue = self.model.predict(current)
+    QValue = self.copy_model.predict(current)
     action = np.zeros(self.actions)
     action_index = 0
     if self.timeStep % FRAME_PER_ACTION == 0:
